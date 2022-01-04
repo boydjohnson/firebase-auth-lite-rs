@@ -29,7 +29,7 @@ extern "C" {
     pub async fn send_oob_code(
         this: &Auth,
         request_type: String,
-        email: Option<String>,
+        email: JsValue,
     ) -> Result<(), JsValue>;
 
     #[wasm_bindgen(method, js_name = "resetPassword", catch)]
