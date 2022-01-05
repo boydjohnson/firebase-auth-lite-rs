@@ -418,6 +418,7 @@ export class Auth {
 		userData.tokenManager = tokenManager;
 
 		await this.setState(userData);
+		return userData;
 	}
 
 	/**
