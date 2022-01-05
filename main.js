@@ -39,7 +39,7 @@ const storageApi = {};
  * @param {string} options.redirectUri The redirect URL used by OAuth providers.
  * @param {Array.<ProviderOptions|string>} options.providers Array of arguments that will be passed to the addProvider method.
  */
-export default class Auth {
+export class Auth {
 	constructor({ apiKey, redirectUri, name = 'default', storage = storageApi } = {}) {
 		if (!apiKey) throw Error('The argument "apiKey" is required');
 
