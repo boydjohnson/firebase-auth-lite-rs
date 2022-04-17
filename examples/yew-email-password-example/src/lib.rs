@@ -2,6 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 
 pub mod home;
+pub mod login;
 pub mod signup;
 
 pub const API_KEY: &str = include_str!("../API_KEY.txt");
@@ -19,7 +20,7 @@ pub enum Route {
 fn switch(routes: &Route) -> Html {
     match routes {
         Route::Home => html! { <home::Home /> },
-        Route::Login => todo!(),
+        Route::Login => html! { <login::Login />},
         Route::Signup => html! { <signup::Signup /> },
     }
 }

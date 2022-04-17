@@ -10,6 +10,8 @@ pub struct Home {
 pub enum HomeMsg {
     NotLoggedIn,
     LoggedIn(String),
+    Signout,
+    Nil,
 }
 
 impl Component for Home {
@@ -32,7 +34,7 @@ impl Component for Home {
         Home { user: None }
     }
 
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             HomeMsg::NotLoggedIn => {
                 self.user = None;
@@ -40,21 +42,41 @@ impl Component for Home {
             HomeMsg::LoggedIn(user) => {
                 self.user = Some(user);
             }
+            HomeMsg::Nil => {
+                return false;
+            }
+            HomeMsg::Signout => {
+                ctx.link().send_future(async move {
+                    let auth = Auth::new(AuthOptions::new(API_KEY));
+
+                    if auth.sign_out().await.is_ok() {
+                        HomeMsg::NotLoggedIn
+                    } else {
+                        HomeMsg::Nil
+                    }
+                });
+                return false;
+            }
         }
         true
     }
 
-    fn view(&self, _ctx: &Context<Self>) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
+        let on_click_signout = ctx.link().callback(|_| HomeMsg::Signout);
+
         if let Some(user) = &self.user {
             html! {
+                <>
                 <h1> { format!("Hello, {}", user) }</h1>
+                <div><button onclick= { on_click_signout }> { "Sign Out" }</button></div>
+                </>
             }
         } else {
             html! {
                 <>
                 <h1>{ "Please Sign up or Log in" }</h1>
-                <span><Link<Route> to = { Route::Signup }>{ "Sign Up" }</Link<Route>></span>
-                <span><Link<Route> to = { Route::Login }>{ "Log In" }</Link<Route>></span>
+                <span style="margin: 10px;"><Link<Route> to = { Route::Signup }>{ "Sign Up" }</Link<Route>></span>
+                <span style="margin: 10px;"><Link<Route> to = { Route::Login }>{ "Log In" }</Link<Route>></span>
                 </>
             }
         }

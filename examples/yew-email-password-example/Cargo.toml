@@ -6,5 +6,6 @@ edition = "2021"
 
 [dependencies]
 firebase-auth-lite = { path = "../../firebase-auth-lite" }
+js-sys = "0.3"
 yew = "0.19"
 yew-router = "0.16"
