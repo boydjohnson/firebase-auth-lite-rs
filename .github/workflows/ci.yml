@@ -30,7 +30,7 @@ jobs:
       run: cargo install wasm-pack
 
     - name: WASM tests
-      run: wasm-pack test --headless --firefox
+      run: cd firebase-auth-lite && wasm-pack test --headless --firefox
 
   check_fmt_and_docs:
     name: Checking fmt, clippy, and docs
