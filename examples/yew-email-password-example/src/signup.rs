@@ -69,10 +69,6 @@ impl Component for Signup {
                                     Some(v) => {
                                         if &v == "EMAIL_EXISTS" {
                                             SignupMsg::Error("Email Already Exists".into())
-                                        } else if &v == "OPERATION_NOT_ALLOWED"
-                                            || &v == "TOO_MANY_ATTEMPTS_TRY_LATER"
-                                        {
-                                            SignupMsg::Error("An Error Occured".into())
                                         } else {
                                             SignupMsg::Error("An Error Occured".into())
                                         }
@@ -107,22 +103,20 @@ impl Component for Signup {
             html! {
                 <p> { "Working on sign up" }</p>
             }
+        } else if let Some(error) = &self.error {
+            html! {
+                <>
+                { self.display_email_password_input(ctx) }
+                <p style="color:red;"> { error }</p>
+                <button onclick = {on_click_signup}>{ "Signup" }</button>
+                </>
+            }
         } else {
-            if let Some(error) = &self.error {
-                html! {
-                    <>
-                    { self.display_email_password_input(ctx) }
-                    <p style="color:red;"> { error }</p>
-                    <button onclick = {on_click_signup}>{ "Signup" }</button>
-                    </>
-                }
-            } else {
-                html! {
-                    <>
-                    { self.display_email_password_input(ctx) }
-                    <button onclick = {on_click_signup}>{ "Signup" }</button>
-                    </>
-                }
+            html! {
+                <>
+                { self.display_email_password_input(ctx) }
+                <button onclick = {on_click_signup}>{ "Signup" }</button>
+                </>
             }
         }
     }

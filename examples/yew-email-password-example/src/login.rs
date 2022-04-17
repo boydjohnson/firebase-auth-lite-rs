@@ -109,24 +109,22 @@ impl Component for Login {
             html! {
                 <p> { "Working on login" }</p>
             }
+        } else if let Some(error) = &self.error {
+            html! {
+                <>
+                { self.display_email_password_input(ctx) }
+                <p style="color:red;">{ error }</p>
+
+                <button onclick = {on_click_signup}>{ "Log In" }</button>
+
+                </>
+            }
         } else {
-            if let Some(error) = &self.error {
-                html! {
-                    <>
-                    { self.display_email_password_input(ctx) }
-                    <p style="color:red;">{ error }</p>
-
-                    <button onclick = {on_click_signup}>{ "Log In" }</button>
-
-                    </>
-                }
-            } else {
-                html! {
-                    <>
-                    { self.display_email_password_input(ctx) }
-                    <button onclick = {on_click_signup}>{ "Log In" }</button>
-                    </>
-                }
+            html! {
+                <>
+                { self.display_email_password_input(ctx) }
+                <button onclick = {on_click_signup}>{ "Log In" }</button>
+                </>
             }
         }
     }
