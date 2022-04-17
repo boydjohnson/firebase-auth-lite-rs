@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  wasm-tests:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Install nightly rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        override: true
+
+    - name: Install firefox
+      run: sudo apt-get install firefox
+
+    - name: Install wasm-pack
+      run: cargo install wasm-pack
+
+    - name: WASM tests
+      run: wasm-pack test --headless --firefox
+
+  check_fmt_and_docs:
+    name: Checking fmt, clippy, and docs
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        rust: [stable, nightly]
+    steps:
+    - uses: actions/checkout@master
+
+    - name: check
+      run: cargo c
+    
+    - name: setup
+      run: |
+        rustup component add clippy rustfmt
+        rustc --version
+    - name: clippy
+      run: cargo clippy --tests --examples --bins -- -D warnings
+
+    - name: fmt
+      run: cargo fmt --all -- --check
+
+    - name: Docs
+      run: cargo doc --no-deps
