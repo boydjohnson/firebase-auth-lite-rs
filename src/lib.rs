@@ -7,14 +7,17 @@ extern "C" {
     #[wasm_bindgen(constructor)]
     pub fn new(opts: AuthOptions) -> Auth;
 
-    #[wasm_bindgen(method, js_name = "signOut")]
-    pub fn sign_out(this: &Auth) -> js_sys::Promise;
+    #[wasm_bindgen(method, js_name = "signOut", catch)]
+    pub async fn sign_out(this: &Auth) -> Result<(), JsValue>;
 
     #[wasm_bindgen(method, js_name = "signInWithCustomToken", catch)]
     pub async fn sign_in_with_custom_token(this: &Auth, token: String) -> Result<JsValue, JsValue>;
 
-    #[wasm_bindgen(method, js_name = "signInWithProvider")]
-    pub async fn sign_in_with_provider(this: &Auth, options: OauthFlowOptions);
+    #[wasm_bindgen(method, js_name = "signInWithProvider", catch)]
+    pub async fn sign_in_with_provider(
+        this: &Auth,
+        options: OauthFlowOptions,
+    ) -> Result<(), JsValue>;
 
     #[wasm_bindgen(method, js_name = "handleSignInRedirect", catch)]
     pub async fn handle_sign_in_redirect(this: &Auth) -> Result<(), JsValue>;
@@ -29,7 +32,7 @@ extern "C" {
     pub async fn send_oob_code(
         this: &Auth,
         request_type: String,
-        email: JsValue,
+        email: String,
     ) -> Result<(), JsValue>;
 
     #[wasm_bindgen(method, js_name = "resetPassword", catch)]
