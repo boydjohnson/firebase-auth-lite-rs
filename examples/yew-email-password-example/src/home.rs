@@ -1,5 +1,5 @@
 use crate::{Route, API_KEY};
-use firebase_auth_lite::{Auth, AuthOptions};
+use firebase_auth_lite::{Auth, AuthOptions, UserProfile};
 use yew::prelude::*;
 use yew_router::components::Link;
 
@@ -20,10 +20,13 @@ impl Component for Home {
         let auth = Auth::new(AuthOptions::new(API_KEY, "".into()));
 
         ctx.link().send_future(async move {
-            match auth.fetch_profile().await {
-                Ok(prof) => HomeMsg::LoggedIn("User".into()),
-                Err(_) => HomeMsg::NotLoggedIn,
+            if let Ok(prof) = auth.fetch_profile().await {
+                if let Ok(prof) = prof.into_serde() {
+                    let user_profile: UserProfile = prof;
+                    return HomeMsg::LoggedIn(user_profile.email);
+                }
             }
+            HomeMsg::NotLoggedIn
         });
 
         Home { user: None }

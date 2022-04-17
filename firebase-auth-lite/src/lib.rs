@@ -1,3 +1,4 @@
+use serde::Deserialize;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen(module = "/main.js")]
@@ -54,6 +55,27 @@ extern "C" {
     #[wasm_bindgen(method, js_name = "deleteAccount", catch)]
     pub async fn delete_account(this: &Auth) -> Result<(), JsValue>;
 
+}
+
+#[derive(Debug, Deserialize)]
+pub struct UserProfile {
+    #[serde(rename = "localId")]
+    pub local_id: String,
+    pub email: String,
+    #[serde(rename = "passwordHash")]
+    pub password_hash: String,
+    #[serde(rename = "emailVerified")]
+    pub email_verified: bool,
+    #[serde(rename = "passwordUpdatedAt")]
+    pub password_updated_at: u64,
+    #[serde(rename = "validSince")]
+    pub valid_since: String,
+    #[serde(rename = "lastLoginAt")]
+    pub last_login_at: String,
+    #[serde(rename = "createdAt")]
+    pub created_at: String,
+    #[serde(rename = "lastRefreshAt")]
+    pub last_refresh_at: String,
 }
 
 #[wasm_bindgen]

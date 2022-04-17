@@ -1,7 +1,7 @@
 use crate::{Route, API_KEY};
 use firebase_auth_lite::{Auth, AuthOptions};
 use yew::{events::InputEvent, prelude::*};
-use yew_router::{history::History, hooks::use_history};
+use yew_router::{history::History, scope_ext::RouterScopeExt};
 
 pub struct Signup {
     email: Option<String>,
@@ -32,11 +32,19 @@ impl Component for Signup {
     fn update(&mut self, ctx: &Context<Self>, msg: SignupMsg) -> bool {
         match msg {
             SignupMsg::EmailInput(email) => {
-                self.email = Some(email);
+                if let Some(e) = &mut self.email {
+                    e.push_str(&email);
+                } else {
+                    self.email = Some(email);
+                }
                 false
             }
             SignupMsg::PasswordInput(password) => {
-                self.password = Some(password);
+                if let Some(e) = &mut self.password {
+                    e.push_str(&password);
+                } else {
+                    self.password = Some(password);
+                }
                 false
             }
             SignupMsg::Signup => {
@@ -60,7 +68,7 @@ impl Component for Signup {
                 }
             }
             SignupMsg::ChangeToHome => {
-                if let Some(history) = use_history() {
+                if let Some(history) = ctx.link().history() {
                     history.push(Route::Home);
                 }
                 true
