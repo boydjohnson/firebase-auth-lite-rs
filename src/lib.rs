@@ -59,7 +59,7 @@ extern "C" {
 #[wasm_bindgen]
 pub struct AuthOptions {
     api_key: String,
-    redirect_uri: String,
+    redirect_uri: Option<String>,
 }
 
 #[wasm_bindgen]
@@ -70,17 +70,22 @@ impl AuthOptions {
     }
 
     #[wasm_bindgen(getter, js_name = "redirectUri")]
-    pub fn redirect_uri(&self) -> String {
+    pub fn redirect_uri(&self) -> Option<String> {
         self.redirect_uri.clone()
     }
 }
 
 impl AuthOptions {
-    pub fn new(api_key: &str, redirect_uri: String) -> Self {
+    pub fn new(api_key: &str) -> Self {
         AuthOptions {
             api_key: api_key.into(),
-            redirect_uri,
+            redirect_uri: None,
         }
+    }
+
+    pub fn with_redirect_uri(mut self, redirect_uri: String) -> Self {
+        self.redirect_uri = Some(redirect_uri);
+        self
     }
 }
 
